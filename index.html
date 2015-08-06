@@ -1,0 +1,134 @@
+<!--
+
+Had to:
+
+1) Create new Identity Pool using Cognito allowing unauthenticated identities
+Make sure to check "Enable access to unauthenticated identities", but accept defaults otherwise
+
+2) CORS Configuration
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+
+3) Bucket Policy
+{
+	"Version": "2012-10-17",
+	"Id": "S3PolicyId1",
+	"Statement": [
+		{
+			"Sid": "IPAllow",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:*",
+			"Resource": "arn:aws:s3:::dibartolo-family-photos/*",
+			"Condition": {
+				"IpAddress": {
+					"aws:SourceIp": "69.203.103.118/24"
+				}
+			}
+		}
+	]
+}
+
+4) Grant "List" permissions to "Authenticated Users"
+
+-->
+<html>
+<head>
+<title></title>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.42.min.js"></script>
+<script type="text/javascript">
+
+  // Configure your region
+  AWS.config.region = 'us-east-1';
+
+  // set the default config object
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'us-east-1:babb179a-4aa9-44d2-9144-29f3fee02665'
+  });
+
+  var rootURL = "http://dibartolo-family-photos.s3-website-us-east-1.amazonaws.com";
+  var bucket  = 'dibartolo-family-photos';
+  var delim   = '/';
+  var maxKeys = 500;
+
+</script>
+</head>
+<body>
+<div id="status"></div>
+<ul id="objects"></ul>
+
+<script type="text/javascript">
+
+  //listObjects('');
+  //listObjects('2010/');
+  listObjects('2010/031210 (Pirate Couch)/');
+
+
+
+  function listObjects(prefix){
+
+    var opts = {Bucket: bucket, Prefix: prefix, Marker: prefix, Delimiter: delim, MaxKeys: maxKeys };
+    var s3   = new AWS.S3();
+    s3.listObjects(opts, function(err, data){
+
+      if (err) {
+
+        document.getElementById('status').innerHTML =
+          'Could not load objects from S3';
+
+      } else {
+
+        document.getElementById('status').innerHTML =
+          'Loaded ' + data.CommonPrefixes.length + ' folders and ' + data.Contents.length + ' files from S3';
+
+        listDirectories(data, prefix);
+        listFiles(data, prefix);
+
+      }//if-else
+
+    });
+
+  }//function listObjects
+
+
+
+  function listDirectories(data, prefix){
+
+    for(var i=0; i<data.CommonPrefixes.length; i++){
+
+      var name = data.CommonPrefixes[i].Prefix;
+      if( prefix != '' ) name = name.replace(prefix, '');
+
+      document.getElementById('objects').innerHTML +=
+        '<li><a href="' + rootURL + '/' + data.CommonPrefixes[i].Prefix + '">' + name + '</a></li>';
+
+    }//for
+
+  }//function listDirectories
+
+
+
+  function listFiles(data, prefix){
+
+    for(var i=0; i<data.Contents.length; i++){
+
+      var name = data.Contents[i].Key;
+      if( prefix != '' ) name = name.replace(prefix, '');
+
+      document.getElementById('objects').innerHTML +=
+        '<li><a href="' + rootURL + '/' + data.Contents[i].Key + '">' + name + '</a></li>';
+
+     }//for
+
+  }//function listFiles
+
+
+</script>
+</body>
+</html>
