@@ -67,9 +67,15 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
 <script type="text/javascript">
 
   $(document).ready(function(){
+
     listObjects('');
     //listObjects('2010/');
     //listObjects('2010/031210 (Pirate Couch)/');
+
+    $('.dirLink').on('click', '.dirLink', function(){
+      alert( $(this).text() );
+    });
+
   });
   
 
@@ -105,7 +111,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
       var name = data.CommonPrefixes[i].Prefix;
       if( prefix != '' ) name = name.replace(prefix, '');
 
-      $('#objects').append('<li><a href="' + rootURL + '/' + data.CommonPrefixes[i].Prefix + '">' + name + '</a></li>');
+      $('#objects').append('<li><a class="dirLink" href="#">' + name + '</a></li>');
 
     }//for
 
