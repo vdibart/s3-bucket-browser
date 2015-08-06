@@ -41,6 +41,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
 <html>
 <head>
 <title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.42.min.js"></script>
 <script type="text/javascript">
 
@@ -65,10 +66,12 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
 
 <script type="text/javascript">
 
-  //listObjects('');
-  //listObjects('2010/');
-  listObjects('2010/031210 (Pirate Couch)/');
-
+  $(document).ready(function(){
+    listObjects('');
+    //listObjects('2010/');
+    //listObjects('2010/031210 (Pirate Couch)/');
+  });
+  
 
 
   function listObjects(prefix){
@@ -79,14 +82,11 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
 
       if (err) {
 
-        document.getElementById('status').innerHTML =
-          'Could not load objects from S3';
+        $('#status').html('Could not load objects from S3');
 
       } else {
 
-        document.getElementById('status').innerHTML =
-          'Loaded ' + data.CommonPrefixes.length + ' folders and ' + data.Contents.length + ' files from S3';
-
+        $('#status').html('Loaded ' + data.CommonPrefixes.length + ' folders and ' + data.Contents.length + ' files from S3');
         listDirectories(data, prefix);
         listFiles(data, prefix);
 
@@ -105,8 +105,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
       var name = data.CommonPrefixes[i].Prefix;
       if( prefix != '' ) name = name.replace(prefix, '');
 
-      document.getElementById('objects').innerHTML +=
-        '<li><a href="' + rootURL + '/' + data.CommonPrefixes[i].Prefix + '">' + name + '</a></li>';
+      $('#objects').append('<li><a href="' + rootURL + '/' + data.CommonPrefixes[i].Prefix + '">' + name + '</a></li>');
 
     }//for
 
@@ -121,8 +120,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
       var name = data.Contents[i].Key;
       if( prefix != '' ) name = name.replace(prefix, '');
 
-      document.getElementById('objects').innerHTML +=
-        '<li><a href="' + rootURL + '/' + data.Contents[i].Key + '">' + name + '</a></li>';
+      $('#objects').append('<li><a href="' + rootURL + '/' + data.Contents[i].Key + '">' + name + '</a></li>');
 
      }//for
 
