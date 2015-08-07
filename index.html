@@ -62,7 +62,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
 </head>
 <body>
 <div id="status"></div>
-<ul id="objects"></ul>
+<ul id="listing"></ul>
 
 <script type="text/javascript">
 
@@ -72,7 +72,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
     //listObjects('2010/');
     //listObjects('2010/031210 (Pirate Couch)/');
 
-    $('.dirLink').on('click', '.dirLink', function(){
+    $('#listing').on('click', '.dir', function(){
       alert( $(this).text() );
     });
 
@@ -111,7 +111,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
       var name = data.CommonPrefixes[i].Prefix;
       if( prefix != '' ) name = name.replace(prefix, '');
 
-      $('#objects').append('<li><a class="dirLink" href="#">' + name + '</a></li>');
+      $('#listing').append('<li><a class="dir" href="#">' + name + '</a></li>');
 
     }//for
 
@@ -126,7 +126,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
       var name = data.Contents[i].Key;
       if( prefix != '' ) name = name.replace(prefix, '');
 
-      $('#objects').append('<li><a href="' + rootURL + '/' + data.Contents[i].Key + '">' + name + '</a></li>');
+      $('#listing').append('<li><a href="' + rootURL + '/' + data.Contents[i].Key + '">' + name + '</a></li>');
 
      }//for
 
