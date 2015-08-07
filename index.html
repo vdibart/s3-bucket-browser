@@ -69,11 +69,17 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
   $(document).ready(function(){
 
     listObjects('');
-    //listObjects('2010/');
-    //listObjects('2010/031210 (Pirate Couch)/');
 
     $('#listing').on('click', '.dir', function(){
-      alert( $(this).text() );
+
+      $('#status').html('');
+      $('#listing').html('');
+
+      var href = $(this).attr('href').substr(1); 
+      listObjects(href);
+      window.history.pushState(null, null, href);
+      return false;
+
     });
 
   });
@@ -111,7 +117,7 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
       var name = data.CommonPrefixes[i].Prefix;
       if( prefix != '' ) name = name.replace(prefix, '');
 
-      $('#listing').append('<li><a class="dir" href="#">' + name + '</a></li>');
+      $('#listing').append('<li><a class="dir" href="/' + prefix + name + '">' + name + '</a></li>');
 
     }//for
 
