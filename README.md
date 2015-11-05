@@ -1,6 +1,8 @@
 # s3-bucket-browser
 An single index.html file that - along with proper config - allows the visitor to browse through an S3 bucket
 
+Note the URLs below and in the code are IP-restricted.  And even if you did get access to them all you'd see is a thousand pictures of my sons : )
+
 Had to:
 
 1) Create new Identity Pool using Cognito allowing unauthenticated identities
@@ -26,10 +28,10 @@ Make sure to check "Enable access to unauthenticated identities", but accept def
                         "Effect": "Allow",
                         "Principal": "*",
                         "Action": "s3:*",
-                        "Resource": "arn:aws:s3:::dibartolo-family-photos/*",
+                        "Resource": "arn:aws:s3:::<bucket-name>/*",
                         "Condition": {
                                 "IpAddress": {
-                                        "aws:SourceIp": "69.203.103.118/24"
+                                        "aws:SourceIp": "<IP>/24"
                                 }
                         }
                 }
